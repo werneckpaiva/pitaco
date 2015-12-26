@@ -4,7 +4,7 @@ from os.path import join
 from datetime import datetime
 from lxml.html import fromstring
 from pitaco.megasena.results_analyzer import MegasenaResultsAnalyzer,\
-    MegaSenaResult
+    MegasenaResult
 
 
 class MegaSena(object):
@@ -59,7 +59,7 @@ class MegasenaFileLoader(object):
                 f.write("%s,%s,%s\n" % (r[0], r[1].strftime("%Y-%m-%d"), ",".join([str(n) for n in r[2]])))
             f.write("%s,%s,%s" % (last[0], last[1].strftime("%Y-%m-%d"), ",".join([str(n) for n in last[2]])))
 
-    def loadResultFromCsv(self):
+    def load_from_csv(self):
         megasena = MegasenaResultsAnalyzer()
         csv_filename = join(self.download_folder, "result.csv")
         for line in open(csv_filename, "r"):
@@ -67,9 +67,9 @@ class MegasenaFileLoader(object):
             n = parts[0]
             dt = datetime.strptime(parts[1], "%Y-%m-%d")
             numbers = parts[2:8]
-            megasena.add_result(MegaSenaResult(
+            megasena.add_result(
                 n=n,
                 dt=dt,
                 numbers=numbers
-            ))
+            )
         return megasena
