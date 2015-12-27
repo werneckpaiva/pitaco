@@ -46,3 +46,18 @@ class ResultsAnalyzerTest(unittest.TestCase):
         result = analyzer.count_odd_even()
         self.assertEqual(result, {"even":[(3, 2)], "odd":[(6, 1), (3, 2)]})
 
+    def test_count_adjacents_by_1(self):
+        analyzer = MegasenaResultsAnalyzer()
+        analyzer.add_result(1, date.today(), [1, 2, 4, 9, 11, 14])
+        analyzer.add_result(2, date.today(), [3, 4, 5, 12, 16, 30])
+        
+        result = analyzer.count_adjacents_by(1)
+        self.assertEqual(result, {1: 1, 2:2})
+
+    def test_count_adjacents_by_2(self):
+        analyzer = MegasenaResultsAnalyzer()
+        analyzer.add_result(1, date.today(), [1, 2, 4, 9, 11, 14])
+        analyzer.add_result(2, date.today(), [3, 4, 5, 12, 16, 30])
+        
+        result = analyzer.count_adjacents_by(2)
+        self.assertEqual(result, {1: 2, 2:1})

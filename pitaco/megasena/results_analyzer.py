@@ -65,3 +65,16 @@ class MegasenaResultsAnalyzer:
         result = {"odd":sorted(odds.items(), reverse=True), 
                   "even":sorted(evens.items(), reverse=True)}
         return result
+
+    
+    def count_adjacents_by(self, distance):
+        frequency = {}
+        for r in self.results:
+            numbers = sorted(r.numbers)
+            count = 0
+            for i in xrange(5):
+                if numbers[i] + distance in numbers[i+1:]:
+                    count += 1
+            if count > 0:
+                frequency[r.n] = count
+        return frequency
