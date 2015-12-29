@@ -1,1 +1,1 @@
-web: gunicorn pitaco:app --log-file=-
+web: gunicorn pitaco.application:app --log-file=-
