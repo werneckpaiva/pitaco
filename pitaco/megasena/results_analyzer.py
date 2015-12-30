@@ -27,16 +27,17 @@ class MegasenaResultsAnalyzer:
         )
         self.results.append(result)
     
-    def get_most_frequent(self, qnt):
+    def get_most_frequent(self, qnt=0):
         freq = {}
         for r in self.results:
             for n in r.numbers:
                 freq[n] = freq.get(n, 0) + 1
         sorted_freq = sorted(freq.items(), key=lambda x:x[1], reverse=True)
-        return sorted_freq[0:qnt]
+        if qnt > 0: sorted_freq[0:qnt]
+        return sorted_freq
 
     
-    def get_longest_numbers_missing(self, qnt):
+    def get_longest_numbers_missing(self, qnt=0):
         numbers = {}
         for i, r in enumerate(self.results[::-1]):
             for n in r.numbers:
@@ -45,7 +46,8 @@ class MegasenaResultsAnalyzer:
             if len(numbers) == 60:
                 break
         sorted_numbers = sorted(numbers.items(), key=lambda x: x[1], reverse=True)
-        return sorted_numbers[0:qnt]
+        if qnt > 0: sorted_numbers[0:qnt]
+        return sorted_numbers
 
     def count_odd_even(self):
         odds = {}
@@ -78,3 +80,7 @@ class MegasenaResultsAnalyzer:
             if count > 0:
                 frequency[r.n] = count
         return frequency
+
+    
+    def get_total(self):
+        return len(self.results)

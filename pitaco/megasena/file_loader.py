@@ -3,12 +3,7 @@ import zipfile
 from os.path import join
 from datetime import datetime
 from lxml.html import fromstring
-from pitaco.megasena.results_analyzer import MegasenaResultsAnalyzer,\
-    MegasenaResult
-
-
-class MegaSena(object):
-    pass
+from pitaco.megasena.results_analyzer import MegasenaResultsAnalyzer
 
 
 class MegasenaFileLoader(object):
