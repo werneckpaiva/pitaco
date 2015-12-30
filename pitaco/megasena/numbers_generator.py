@@ -56,21 +56,23 @@ class MegasenaNumberGenerator(object):
         return n
 
     def calculate_odds_evens(self, numbers):
+        if len(numbers) == 6:
+            return
         (p_odd, p_even) = self.result_analyzer.calculate_prob_odd_even(numbers)
-        
-        print "total: %s, evens: %s, odds: %s" % (len(numbers), evens, odds)
-        print "p_odd: %s, p_even: %s" % (p_odd, p_even)
+#         print "p_odd: ", p_odd, "p_even: ", p_even
+        for i, (n, p) in enumerate(self.numbers):
+            new_p = (p_odd if n % 2 == 1 else p_even) * 2
+            self.numbers[i] = (n, p + new_p)
 
     def generate(self):
         self.numbers = zip(range(1, 61), [1]*60)
         self.calc_frequency()
         self.calc_missing_numbers()
-        
+
         numbers = []
         for _ in xrange(6):
             numbers.append(self.sample())
-#             self.calculate_odds_evens(numbers)
-
+            self.calculate_odds_evens(numbers)
         numbers = sorted(numbers)
         return numbers
 

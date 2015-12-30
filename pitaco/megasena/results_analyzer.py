@@ -81,19 +81,20 @@ class MegasenaResultsAnalyzer:
                 frequency[r.n] = count
         return frequency
 
-    
     def get_total(self):
         return len(self.results)
 
     def calculate_prob_odd_even(self, numbers):
         n_evens = sum([1 for n in numbers if n%2==0])
-        n_odds = sum([1 for n in numbers if n%2==1])
-        ps = []
+        qnt_numbers = len(numbers)
+        total_evens = 0
         for r in self.results:
+            total_partial = len(r.numbers) - qnt_numbers
             r_evens = sum([1 for n in r.numbers if n%2==0])
-            r_odds = len(r.numbers) - r_evens
             qnt_evens = r_evens - n_evens
-            qnt_odds = r_odds - n_odds
-        pass
-    
-    
+            p_even = qnt_evens / float(total_partial) if qnt_evens >= 0 else 0
+#             print "evens: %s odds: %s qnt_evens: %s partial: %s p_even: %s  %s" % (r_evens, r_odds, qnt_evens, total_partial, p_even, r.numbers)
+            total_evens += p_even
+        total_p_even = total_evens / len(self.results)
+#         print "total evens: ",total_evens, " total: ", total_p_even
+        return (1-total_p_even, total_p_even)
