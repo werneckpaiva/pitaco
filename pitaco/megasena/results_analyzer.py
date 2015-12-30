@@ -84,3 +84,16 @@ class MegasenaResultsAnalyzer:
     
     def get_total(self):
         return len(self.results)
+
+    def calculate_prob_odd_even(self, numbers):
+        n_evens = sum([1 for n in numbers if n%2==0])
+        n_odds = sum([1 for n in numbers if n%2==1])
+        ps = []
+        for r in self.results:
+            r_evens = sum([1 for n in r.numbers if n%2==0])
+            r_odds = len(r.numbers) - r_evens
+            qnt_evens = r_evens - n_evens
+            qnt_odds = r_odds - n_odds
+        pass
+    
+    

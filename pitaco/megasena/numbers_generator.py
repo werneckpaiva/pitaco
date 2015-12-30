@@ -44,25 +44,33 @@ class MegasenaNumberGenerator(object):
 #         print sorted(self.numbers, reverse=True, key=lambda x: x[1])
 #         print missing
 
-    def sample(self, k):
-        s = []
-        for _ in xrange(k):
-            total = sum([p for n, p in self.numbers])
-            r = int(uniform(1, total + 1) * 100) / 100.0
-            p_count = 0
-            for i, (n, p) in enumerate(self.numbers):
-                p_count += p
-                if p_count >= r:
-                    s.append(n)
-                    self.numbers.pop(i)
-                    break
-        return s
+    def sample(self):
+        total = sum([p for n, p in self.numbers])
+        r = int(uniform(0, total) * 100) / 100.0
+        p_count = 0
+        for i, (n, p) in enumerate(self.numbers):
+            p_count += p
+            if p_count >= r:
+                self.numbers.pop(i)
+                break
+        return n
+
+    def calculate_odds_evens(self, numbers):
+        (p_odd, p_even) = self.result_analyzer.calculate_prob_odd_even(numbers)
+        
+        print "total: %s, evens: %s, odds: %s" % (len(numbers), evens, odds)
+        print "p_odd: %s, p_even: %s" % (p_odd, p_even)
 
     def generate(self):
         self.numbers = zip(range(1, 61), [1]*60)
         self.calc_frequency()
         self.calc_missing_numbers()
-        numbers = self.sample(6)
+        
+        numbers = []
+        for _ in xrange(6):
+            numbers.append(self.sample())
+#             self.calculate_odds_evens(numbers)
+
         numbers = sorted(numbers)
         return numbers
 
@@ -72,7 +80,6 @@ class MegasenaNumberGenerator(object):
             numbers = self._generate()
             for n in numbers:
                 r[n-1] += 1
-        print self.result_analyzer.get_most_frequent()
-        print ""
+        print "Sorteados: "
         print sorted([(i+1, n) for (i, n) in enumerate(r)], key=lambda x: x[1], reverse=True)
         return self._generate()
