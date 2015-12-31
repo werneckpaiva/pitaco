@@ -1,6 +1,5 @@
-from random import sample, uniform
+from random import uniform
 from pitaco.megasena.file_loader import MegasenaFileLoader
-from os.path import dirname, join
 
 
 class MegasenaNumberGenerator(object):
@@ -9,8 +8,7 @@ class MegasenaNumberGenerator(object):
     result_analyzer = None
     
     
-    def __init__(self):
-        folder = join(dirname(dirname(dirname(__file__))), "downloads")
+    def __init__(self, folder):
         loader = MegasenaFileLoader(folder)
         self.result_analyzer = loader.load_from_csv()
 
