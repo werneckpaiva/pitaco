@@ -2,3 +2,5 @@ downloads/*.HTM
 downloads/*.zip
 downloads/*.GIF
 downloads_tests/*.GIF
+
+*.pyc
