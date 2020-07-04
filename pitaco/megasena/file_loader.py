@@ -1,9 +1,9 @@
-import urllib2
 import zipfile
 from os.path import join
 from datetime import datetime
 from lxml.html import fromstring
 from pitaco.megasena.results_analyzer import MegasenaResultsAnalyzer
+import urllib.request
 
 
 class MegasenaFileLoader(object):
@@ -18,7 +18,7 @@ class MegasenaFileLoader(object):
         return join(self.download_folder, "megasena.zip")
 
     def download_file(self):
-        opener = urllib2.build_opener()
+        opener = urllib.request.build_opener()
         opener.addheaders.append(('Cookie', 'security=true'))
         r = opener.open(self.URL)
         block_size = 8192

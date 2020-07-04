@@ -67,14 +67,13 @@ class MegasenaResultsAnalyzer:
         result = {"odd":sorted(odds.items(), reverse=True), 
                   "even":sorted(evens.items(), reverse=True)}
         return result
-
     
     def count_adjacents_by(self, distance):
         frequency = {}
         for r in self.results:
             numbers = sorted(r.numbers)
             count = 0
-            for i in xrange(5):
+            for i in range(5):
                 if numbers[i] + distance in numbers[i+1:]:
                     count += 1
             if count > 0:
@@ -93,8 +92,6 @@ class MegasenaResultsAnalyzer:
             r_evens = sum([1 for n in r.numbers if n%2==0])
             qnt_evens = r_evens - n_evens
             p_even = qnt_evens / float(total_partial) if qnt_evens >= 0 else 0
-#             print "evens: %s odds: %s qnt_evens: %s partial: %s p_even: %s  %s" % (r_evens, r_odds, qnt_evens, total_partial, p_even, r.numbers)
             total_evens += p_even
         total_p_even = total_evens / len(self.results)
-#         print "total evens: ",total_evens, " total: ", total_p_even
-        return (1-total_p_even, total_p_even)
+        return (1-total_p_even), total_p_even

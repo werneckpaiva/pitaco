@@ -7,7 +7,6 @@ class MegasenaNumberGenerator(object):
     numbers = None
     result_analyzer = None
     
-    
     def __init__(self, folder):
         loader = MegasenaFileLoader(folder)
         self.result_analyzer = loader.load_from_csv()
@@ -21,11 +20,6 @@ class MegasenaNumberGenerator(object):
             p = self.numbers[n-1][1]
             new_p = (((f - lowest) / delta) * 4)
             self.numbers[n-1] = (n, p + new_p)
-#         print "freq: " 
-#         print freq
-#         print "numbers: "
-#         print sorted(self.numbers, reverse=True, key=lambda x: x[1])
-#         print "---"
 
     def calc_missing_numbers(self):
         missing = self.result_analyzer.get_longest_numbers_missing()
@@ -36,11 +30,6 @@ class MegasenaNumberGenerator(object):
             p = self.numbers[n-1][1]
             new_p = (((f - lowest) / delta) * 4)
             self.numbers[n-1] = (n, p + new_p)
-#         
-#         print missing
-#         print "numbers: "
-#         print sorted(self.numbers, reverse=True, key=lambda x: x[1])
-#         print missing
 
     def sample(self):
         total = sum([p for n, p in self.numbers])
@@ -57,18 +46,17 @@ class MegasenaNumberGenerator(object):
         if len(numbers) == 6:
             return
         (p_odd, p_even) = self.result_analyzer.calculate_prob_odd_even(numbers)
-#         print "p_odd: ", p_odd, "p_even: ", p_even
         for i, (n, p) in enumerate(self.numbers):
             new_p = (p_odd if n % 2 == 1 else p_even) * 2
             self.numbers[i] = (n, p + new_p)
 
     def generate(self):
-        self.numbers = zip(range(1, 61), [1]*60)
+        self.numbers = list(zip(range(1, 61), [1]*60))
         self.calc_frequency()
         self.calc_missing_numbers()
 
         numbers = []
-        for _ in xrange(6):
+        for _ in range(6):
             numbers.append(self.sample())
             self.calculate_odds_evens(numbers)
         numbers = sorted(numbers)
@@ -76,10 +64,10 @@ class MegasenaNumberGenerator(object):
 
     def _generate(self):
         r = [0] * 60  
-        for _ in xrange(5000):
+        for _ in range(5000):
             numbers = self._generate()
             for n in numbers:
                 r[n-1] += 1
-        print "Sorteados: "
-        print sorted([(i+1, n) for (i, n) in enumerate(r)], key=lambda x: x[1], reverse=True)
+        print("Sorteados: ")
+        print(sorted([(i+1, n) for (i, n) in enumerate(r)], key=lambda x: x[1], reverse=True))
         return self._generate()
