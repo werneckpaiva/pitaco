@@ -34,7 +34,7 @@ class MegasenaFileLoader(object):
 
     def convert_file_to_csv(self):
         filename = join(self.download_folder, "D_MEGA.HTM") 
-        with open(filename, "r") as f:
+        with open(filename, "r", encoding="ISO-8859-1") as f:
             content = f.read()
         html = fromstring(content)
         rows = html.cssselect('tr')
