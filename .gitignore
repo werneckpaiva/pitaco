@@ -4,3 +4,5 @@ downloads/*.GIF
 downloads_tests/*.GIF
 
 *.pyc
+
+venv/
