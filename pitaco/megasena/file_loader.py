@@ -8,14 +8,15 @@ import urllib.request
 
 class MegasenaFileLoader(object):
 
-    URL = "http://www1.caixa.gov.br/loterias/_arquivos/loterias/D_megase.zip"
+    URL = "view-source:https://loterias.caixa.gov.br/wps/portal/loterias/landing/megasena/"
+    RESULT_FILE = "resultado_megasena.html"
     download_folder = None
 
     def __init__(self, download_folder):
         self.download_folder = download_folder
 
     def _get_download_filename(self):
-        return join(self.download_folder, "megasena.zip")
+        return join(self.download_folder, "megasena_result.html")
 
     def download_file(self):
         opener = urllib.request.build_opener()
@@ -33,7 +34,7 @@ class MegasenaFileLoader(object):
             z.extractall(self.download_folder)
 
     def convert_file_to_csv(self):
-        filename = join(self.download_folder, "D_MEGA.HTM") 
+        filename = join(self.download_folder, MegasenaFileLoader.RESULT_FILE)
         with open(filename, "r", encoding="ISO-8859-1") as f:
             content = f.read()
         html = fromstring(content)
@@ -41,9 +42,9 @@ class MegasenaFileLoader(object):
         result = []
         for row in rows:
             tds = row.cssselect("td")
-            if len(tds) == 21:
-                numbers = [t.text for t in tds[2:8]]
-                dt = datetime.strptime(tds[1].text, "%d/%m/%Y")
+            if len(tds) > 10:
+                numbers = [t.text for t in tds[3:9]]
+                dt = datetime.strptime(tds[2].text, "%d/%m/%Y")
                 result.append((tds[0].text, dt, numbers))
 
         sorted(result, key=lambda r: r[0])
