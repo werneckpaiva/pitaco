@@ -1,5 +1,5 @@
 #!/bin/sh
 
 export PYTHONPATH="."
-python pitaco/application.py
+python3 pitaco/application.py
 
