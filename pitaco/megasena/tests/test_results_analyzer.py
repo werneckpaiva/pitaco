@@ -10,7 +10,7 @@ class ResultsAnalyzerTest(unittest.TestCase):
         analyzer.add_result(1, date.today(), [1,2,3,4,5,6])
         analyzer.add_result(2, date.today(), [7, 8, 9, 10, 11, 12])
 
-        self.assertEquals(len(analyzer.results), 2)
+        self.assertEqual(len(analyzer.results), 2)
 
     def test_3_most_frequent_numbers(self):
         analyzer = MegasenaResultsAnalyzer()

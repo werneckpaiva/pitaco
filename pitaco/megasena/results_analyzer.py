@@ -33,7 +33,7 @@ class MegasenaResultsAnalyzer:
             for n in r.numbers:
                 freq[n] = freq.get(n, 0) + 1
         sorted_freq = sorted(freq.items(), key=lambda x:x[1], reverse=True)
-        if qnt > 0: sorted_freq[0:qnt]
+        if qnt > 0: return sorted_freq[0:qnt]
         return sorted_freq
 
     
@@ -46,7 +46,7 @@ class MegasenaResultsAnalyzer:
             if len(numbers) == 60:
                 break
         sorted_numbers = sorted(numbers.items(), key=lambda x: x[1], reverse=True)
-        if qnt > 0: sorted_numbers[0:qnt]
+        if qnt > 0: return sorted_numbers[0:qnt]
         return sorted_numbers
 
     def count_odd_even(self):
