@@ -1,13 +1,4 @@
 Flask
-click
-cssselect
 gunicorn
-importlib-metadata
-itsdangerous
-Jinja2
-lxml
-MarkupSafe
-Werkzeug
-zipp
 pandas
 openpyxl
