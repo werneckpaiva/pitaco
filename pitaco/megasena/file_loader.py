@@ -1,71 +1,125 @@
+import csv
 import zipfile
+import urllib.request
+import urllib.error
 from os.path import join
 from datetime import datetime
-from lxml.html import fromstring
+from typing import List, Tuple, Optional
+
+import pandas as pd
 from pitaco.megasena.results_analyzer import MegasenaResultsAnalyzer
-import urllib.request
 
+class MegasenaFileLoader:
+    """
+    Handles downloading, extracting, and loading Mega Sena results.
+    """
 
-class MegasenaFileLoader(object):
+    # TODO: Verify the correct URL. 'view-source:' is invalid.
+    # If the target is a ZIP file, use the ZIP URL.
+    # If it's an API returning JSON (modern Caixa), this entire approach needs updating.
+    # For now, assuming a direct HTML or ZIP download URL.
+    URL = "https://servicebus2.caixa.gov.br/portaldeloterias/api/resultados/download?modalidade=Mega-Sena"
+    
+    RESULT_FILENAME = "megasena_result" # Base name
+    XLSX_FILE = "megasena_result.xlsx"
+    CSV_FILE = "result.csv"
 
-    URL = "view-source:https://loterias.caixa.gov.br/wps/portal/loterias/landing/megasena/"
-    RESULT_FILE = "resultado_megasena.html"
-    download_folder = None
-
-    def __init__(self, download_folder):
+    def __init__(self, download_folder: str):
         self.download_folder = download_folder
 
-    def _get_download_filename(self):
-        return join(self.download_folder, "megasena_result.html")
+    def _get_file_path(self, filename: str) -> str:
+        return join(self.download_folder, filename)
 
-    def download_file(self):
+    def download_file(self) -> None:
+        """Downloads the results file from the configured URL."""
         opener = urllib.request.build_opener()
         opener.addheaders.append(('Cookie', 'security=true'))
-        r = opener.open(self.URL)
-        block_size = 8192
-        with open(self._get_download_filename(), "wb") as f:
-            while True:
-                chunk = r.read(block_size)
-                if not chunk: break
-                f.write(chunk)
+        opener.addheaders.append(('User-Agent', 'Mozilla/5.0')) # Often needed
 
-    def extract_file(self):
-        with zipfile.ZipFile(self._get_download_filename(), "r") as z:
-            z.extractall(self.download_folder)
+        try:
+            with opener.open(self.URL) as response:
+                target_file = self._get_file_path(self.XLSX_FILE)
 
-    def convert_file_to_csv(self):
-        filename = join(self.download_folder, MegasenaFileLoader.RESULT_FILE)
-        with open(filename, "r", encoding="ISO-8859-1") as f:
-            content = f.read()
-        html = fromstring(content)
-        rows = html.cssselect('tr')
-        result = []
-        for row in rows:
-            tds = row.cssselect("td")
-            if len(tds) > 10:
-                numbers = [t.text for t in tds[3:9]]
-                dt = datetime.strptime(tds[2].text, "%d/%m/%Y")
-                result.append((tds[0].text, dt, numbers))
+                with open(target_file, "wb") as f:
+                    while True:
+                        chunk = response.read(8192)
+                        if not chunk:
+                            break
+                        f.write(chunk)
+                print(f"Downloaded to {target_file}")
+        except urllib.error.URLError as e:
+            print(f"Error downloading file: {e}")
 
-        sorted(result, key=lambda r: r[0])
-        last = result[-1]
-        csv_filename = join(self.download_folder, "result.csv") 
-        with open(csv_filename, "w") as f:
-            for r in result[0:-1]:
-                f.write("%s,%s,%s\n" % (r[0], r[1].strftime("%Y-%m-%d"), ",".join([str(n) for n in r[2]])))
-            f.write("%s,%s,%s" % (last[0], last[1].strftime("%Y-%m-%d"), ",".join([str(n) for n in last[2]])))
+    def extract_file(self) -> None:
+        """Extracts the downloaded ZIP file. (Deprecated for XLSX)"""
+        pass
 
-    def load_from_csv(self):
+    def convert_file_to_csv(self) -> None:
+        """Parses the XLSX result file and converts it to CSV."""
+        xlsx_path = self._get_file_path(self.XLSX_FILE)
+        csv_path = self._get_file_path(self.CSV_FILE)
+        
+        try:
+            df = pd.read_excel(xlsx_path)
+        except FileNotFoundError:
+            print(f"File not found: {xlsx_path}")
+            return
+        except Exception as e:
+            print(f"Error reading excel file: {e}")
+            return
+
+        # Ensure columns exist
+        required_columns = ['Concurso', 'Data do Sorteio', 'Bola1', 'Bola2', 'Bola3', 'Bola4', 'Bola5', 'Bola6']
+        if not all(col in df.columns for col in required_columns):
+            print(f"Missing columns in XLSX. Available: {df.columns}")
+            return
+
+        # Sort by Concurso
+        df['Concurso'] = pd.to_numeric(df['Concurso'], errors='coerce')
+        df = df.sort_values('Concurso')
+
+        with open(csv_path, "w", newline='', encoding='utf-8') as f:
+            writer = csv.writer(f)
+            for _, row in df.iterrows():
+                try:
+                    concurso = str(int(row['Concurso']))
+                    # Date might be datetime or string
+                    dt = row['Data do Sorteio']
+                    if isinstance(dt, str):
+                        dt_obj = datetime.strptime(dt, "%d/%m/%Y")
+                    else:
+                        dt_obj = dt
+                    
+                    dt_str = dt_obj.strftime("%Y-%m-%d")
+                    
+                    numbers = [
+                        str(row['Bola1']), str(row['Bola2']), str(row['Bola3']),
+                        str(row['Bola4']), str(row['Bola5']), str(row['Bola6'])
+                    ]
+                    # Pad numbers with 0 if needed (assuming they are ints)
+                    numbers = [n.zfill(2) for n in numbers]
+
+                    writer.writerow([concurso, dt_str] + numbers)
+                except Exception as e:
+                    print(f"Error processing row {row}: {e}")
+        
+        print(f"Converted to {csv_path}")
+
+    def load_from_csv(self) -> MegasenaResultsAnalyzer:
+        """Loads results from CSV into the analyzer."""
         megasena = MegasenaResultsAnalyzer()
-        csv_filename = join(self.download_folder, "result.csv")
-        for line in open(csv_filename, "r"):
-            parts = line.split(",")
-            n = parts[0]
-            dt = datetime.strptime(parts[1], "%Y-%m-%d")
-            numbers = parts[2:8]
-            megasena.add_result(
-                n=n,
-                dt=dt,
-                numbers=numbers
-            )
+        csv_path = self._get_file_path(self.CSV_FILE)
+        
+        try:
+            with open(csv_path, "r", encoding='utf-8') as f:
+                reader = csv.reader(f)
+                for parts in reader:
+                    if not parts: continue
+                    n = parts[0]
+                    dt = datetime.strptime(parts[1], "%Y-%m-%d")
+                    numbers = parts[2:8]
+                    megasena.add_result(n=n, dt=dt, numbers=numbers)
+        except FileNotFoundError:
+            print(f"CSV file not found: {csv_path}")
+            
         return megasena

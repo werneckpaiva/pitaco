@@ -4,5 +4,6 @@ downloads/*.GIF
 downloads_tests/*.GIF
 
 *.pyc
+__pycache__
 
 venv/
