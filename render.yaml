@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: pitaco
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn pitaco.application:app
+    plan: free
