@@ -1,6 +1,6 @@
 
 
-class MegasenaResult():
+class MegasenaResult:
 
     n = None
     dt = None
