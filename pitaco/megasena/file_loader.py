@@ -7,7 +7,10 @@ from datetime import datetime
 from typing import List, Tuple, Optional
 
 import pandas as pd
+import logging
 from pitaco.megasena.results_analyzer import MegasenaResultsAnalyzer
+
+LOG = logging.getLogger(__name__)
 
 class MegasenaFileLoader:
     """
@@ -46,9 +49,9 @@ class MegasenaFileLoader:
                         if not chunk:
                             break
                         f.write(chunk)
-                print(f"Downloaded to {target_file}")
+                LOG.info(f"Downloaded to {target_file}")
         except urllib.error.URLError as e:
-            print(f"Error downloading file: {e}")
+            LOG.error(f"Error downloading file: {e}")
 
     def extract_file(self) -> None:
         """Extracts the downloaded ZIP file. (Deprecated for XLSX)"""
@@ -62,16 +65,16 @@ class MegasenaFileLoader:
         try:
             df = pd.read_excel(xlsx_path)
         except FileNotFoundError:
-            print(f"File not found: {xlsx_path}")
+            LOG.error(f"File not found: {xlsx_path}")
             return
         except Exception as e:
-            print(f"Error reading excel file: {e}")
+            LOG.error(f"Error reading excel file: {e}")
             return
 
         # Ensure columns exist
         required_columns = ['Concurso', 'Data do Sorteio', 'Bola1', 'Bola2', 'Bola3', 'Bola4', 'Bola5', 'Bola6']
         if not all(col in df.columns for col in required_columns):
-            print(f"Missing columns in XLSX. Available: {df.columns}")
+            LOG.error(f"Missing columns in XLSX. Available: {df.columns}")
             return
 
         # Sort by Concurso
@@ -101,9 +104,9 @@ class MegasenaFileLoader:
 
                     writer.writerow([concurso, dt_str] + numbers)
                 except Exception as e:
-                    print(f"Error processing row {row}: {e}")
+                    LOG.error(f"Error processing row {row}: {e}")
         
-        print(f"Converted to {csv_path}")
+        LOG.info(f"Converted to {csv_path}")
 
     def load_from_csv(self) -> MegasenaResultsAnalyzer:
         """Loads results from CSV into the analyzer."""
@@ -120,6 +123,6 @@ class MegasenaFileLoader:
                     numbers = parts[2:8]
                     megasena.add_result(n=n, dt=dt, numbers=numbers)
         except FileNotFoundError:
-            print(f"CSV file not found: {csv_path}")
+            LOG.error(f"CSV file not found: {csv_path}")
             
         return megasena

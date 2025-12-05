@@ -4,13 +4,17 @@ from flask import jsonify
 from pitaco.megasena.numbers_generator import MegasenaNumberGenerator
 from pitaco.megasena.file_loader import MegasenaFileLoader
 from os.path import dirname, join
+import logging
 
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+LOG = logging.getLogger(__name__)
 
 app = Flask("pitaco")
 
 
 @app.route('/')
 def root():
+    LOG.info("Root endpoint accessed")
     return  render_template("index.html")
 
 
