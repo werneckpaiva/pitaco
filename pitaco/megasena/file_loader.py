@@ -9,6 +9,7 @@ from typing import List, Tuple, Optional
 import pandas as pd
 import logging
 from pitaco.megasena.results_analyzer import MegasenaResultsAnalyzer
+from functools import lru_cache as cache
 
 LOG = logging.getLogger(__name__)
 
@@ -108,6 +109,7 @@ class MegasenaFileLoader:
         
         LOG.info(f"Converted to {csv_path}")
 
+    @cache
     def load_from_csv(self) -> MegasenaResultsAnalyzer:
         """Loads results from CSV into the analyzer."""
         megasena = MegasenaResultsAnalyzer()

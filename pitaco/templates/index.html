@@ -81,6 +81,19 @@
                     </div>
                 </div>
             </div>
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col-lg-12 text-center">
+                    <label class="checkbox-inline" style="font-size: 1.5em; color: white;">
+                        <input type="checkbox" id="chk-frequency" checked> Frequência
+                    </label>
+                    <label class="checkbox-inline" style="font-size: 1.5em; color: white;">
+                        <input type="checkbox" id="chk-missing" checked> Atraso
+                    </label>
+                    <label class="checkbox-inline" style="font-size: 1.5em; color: white;">
+                        <input type="checkbox" id="chk-gaps" checked> Distância
+                    </label>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-lg-12">
                     <button id="btn-generate" type="button" class="btn btn-lg btn-primary">Gerar números</button>
@@ -107,17 +120,21 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-12">
                     <h3 class="text-center">Mais Frequentes</h3>
                     <canvas id="chart-frequent"></canvas>
                 </div>
-                <div class="col-md-4">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <h3 class="text-center">Mais Atrasados</h3>
                     <canvas id="chart-missing"></canvas>
                 </div>
-                <div class="col-md-4">
-                    <h3 class="text-center">Pares vs Ímpares</h3>
-                    <canvas id="chart-odd-even"></canvas>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="text-center">Distribuição de Distância</h3>
+                    <canvas id="chart-gap"></canvas>
                 </div>
             </div>
         </div>
@@ -142,7 +159,7 @@
                     <p>Atualmente estou usando 3 algoritmos:<br />
                         1. Números mais frequentes;<br />
                         2. Números há mais tempo sem sair;<br />
-                        3. Números pares e números ímpares<br />
+                        3. Distribuição de distância entre números<br />
                         Se você tiver sugestão de novos algoritmos, me informe para melhorarmos ainda mais.
                     </p>
                 </div>

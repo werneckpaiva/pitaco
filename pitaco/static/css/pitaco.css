@@ -32,7 +32,7 @@ h4,
 h5,
 h6 {
     text-transform: uppercase;
-    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 700;
 }
 
@@ -98,7 +98,7 @@ header img {
 header .intro-text .name {
     display: block;
     text-transform: uppercase;
-    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 2em;
     font-weight: 700;
 }
@@ -149,7 +149,7 @@ header .intro-text .skills {
 
 .navbar {
     text-transform: uppercase;
-    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: Montserrat, "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 700;
 }
 
@@ -220,7 +220,7 @@ section.success a.active {
     width: 100%;
     height: 100%;
     opacity: 0;
-    background: rgba(24,188,156,.9);
+    background: rgba(24, 188, 156, .9);
     -webkit-transition: all ease .5s;
     -moz-transition: all ease .5s;
     transition: all ease .5s;
@@ -295,7 +295,7 @@ section.success a.active {
     border-radius: 0;
     font-size: 1.5em;
     background: 0 0;
-    box-shadow: none!important;
+    box-shadow: none !important;
     resize: none;
 }
 
@@ -310,10 +310,10 @@ section.success a.active {
     vertical-align: middle;
     vertical-align: baseline;
     opacity: 0;
-    -webkit-transition: top .3s ease,opacity .3s ease;
-    -moz-transition: top .3s ease,opacity .3s ease;
-    -ms-transition: top .3s ease,opacity .3s ease;
-    transition: top .3s ease,opacity .3s ease;
+    -webkit-transition: top .3s ease, opacity .3s ease;
+    -moz-transition: top .3s ease, opacity .3s ease;
+    -ms-transition: top .3s ease, opacity .3s ease;
+    transition: top .3s ease, opacity .3s ease;
 }
 
 .floating-label-form-group::not(:first-child) {
@@ -394,18 +394,68 @@ footer .footer-below {
     outline: 0;
 }
 
-#btn-generate{
+#btn-generate {
     margin-top: 30px;
 }
 
-#generator .number{
+#generator .number {
     font-size: 2em;
     background: #fff;
-    background-color:rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.5);
     padding: 10px 20px;
     border-radius: 5px;
+    display: inline-block;
 }
 
-#generator .all-numbers{
+#generator .all-numbers {
     margin-top: 30px;
+}
+
+@keyframes shake-left {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20%,
+    60% {
+        transform: translateX(-5px);
+    }
+
+    40%,
+    80% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes shake-right {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20%,
+    60% {
+        transform: translateX(5px);
+    }
+
+    40%,
+    80% {
+        transform: translateX(-5px);
+    }
+}
+
+.shake {
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+}
+
+#generator .all-numbers>div:nth-child(odd) .number.shake {
+    animation-name: shake-left;
+}
+
+#generator .all-numbers>div:nth-child(even) .number.shake {
+    animation-name: shake-right;
 }

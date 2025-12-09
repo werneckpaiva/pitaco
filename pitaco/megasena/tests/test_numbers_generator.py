@@ -14,8 +14,12 @@ class NumbersGeneratorTest(unittest.TestCase):
         
         # Setup analyzer mocks to return dummy data needed for generate()
         mock_analyzer.get_most_frequent.return_value = [(1, 10), (2, 5)] # Example data
-        mock_analyzer.get_longest_numbers_missing.return_value = [(3, 10), (4, 5)] # Example data
-        mock_analyzer.calculate_prob_odd_even.return_value = (0.5, 0.5)
+        mock_analyzer.get_numbers_by_absence_duration.return_value = [(3, 10), (4, 5)] # Example data
+        # Return 5 dicts for 5 gaps
+        mock_gap_result = MagicMock()
+        mock_gap_result.sorted_distributions = [{1: 1.0}, {2: 1.0}, {3: 1.0}, {4: 1.0}, {5: 1.0}]
+        mock_gap_result.repetition_stats = {"unique": 1.0, "one_pair": 0.0, "multiple_repetitions": 0.0}
+        mock_analyzer.get_sorted_gap_distributions.return_value = mock_gap_result
 
         generator = MegasenaNumberGenerator("dummy_folder")
         numbers = generator.generate()

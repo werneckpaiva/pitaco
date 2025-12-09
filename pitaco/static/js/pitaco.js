@@ -5,8 +5,8 @@
  */
 
 // jQuery for page scrolling feature - requires jQuery Easing plugin
-$(function() {
-    $('body').on('click', '.page-scroll a', function(event) {
+$(function () {
+    $('body').on('click', '.page-scroll a', function (event) {
         var $anchor = $(this);
         $('html, body').stop().animate({
             scrollTop: $($anchor.attr('href')).offset().top
@@ -21,15 +21,26 @@ $('body').scrollspy({
 })
 
 // Closes the Responsive Menu on Menu Item Click
-$('.navbar-collapse ul li a').click(function() {
+$('.navbar-collapse ul li a').click(function () {
     $('.navbar-toggle:visible').click();
 });
 
-$("#btn-generate").click(function(){
-    $.getJSON("/generate")
-        .done(function(data){
-            for (var i=0; i<6; i++){
-                $("#generated-number-"+i).html(data.numbers[i]);
+$("#btn-generate").click(function () {
+    $(".number").addClass("shake");
+    setTimeout(function () {
+        $(".number").removeClass("shake");
+    }, 500);
+
+    var useFrequency = $("#chk-frequency").is(":checked");
+    var useMissing = $("#chk-missing").is(":checked");
+    var useGaps = $("#chk-gaps").is(":checked");
+
+    var url = "/generate?use_frequency=" + useFrequency + "&use_missing=" + useMissing + "&use_gaps=" + useGaps;
+
+    $.getJSON(url)
+        .done(function (data) {
+            for (var i = 0; i < 6; i++) {
+                $("#generated-number-" + i).html(data.numbers[i]);
             }
         })
 })

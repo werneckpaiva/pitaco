@@ -18,11 +18,22 @@ def root():
     return  render_template("index.html")
 
 
+from flask import request
+
 @app.route('/generate')
 def generate():
     folder = join(dirname(dirname(__file__)), "downloads")
+    
+    use_frequency = request.args.get('use_frequency', 'true') == 'true'
+    use_missing = request.args.get('use_missing', 'true') == 'true'
+    use_gaps = request.args.get('use_gaps', 'true') == 'true'
+    
     generator = MegasenaNumberGenerator(folder)
-    numbers = generator.generate()
+    numbers = generator.generate(
+        use_frequency=use_frequency,
+        use_missing=use_missing,
+        use_gaps=use_gaps
+    )
     return jsonify({'numbers':["%02d" % i for i in numbers]})
 
 
@@ -35,17 +46,20 @@ def get_analyzer():
 @app.route('/stats')
 def stats():
     analyzer = get_analyzer()
-    most_frequent = analyzer.get_most_frequent(10)
-    longest_missing = analyzer.get_longest_numbers_missing(10)
-    odd_even = analyzer.count_odd_even()
+    most_frequent = analyzer.get_most_frequent(60)
+    longest_missing = analyzer.get_numbers_by_absence_duration(60)
+    result = analyzer.get_sorted_gap_distributions()
     
+    # gap_dist is a list of dicts.
+    # We need to format it for JSON.
+    # Let's return list of lists of items [gap, val]
+    sorted_gap_dists = [sorted(g.items()) for g in result.sorted_distributions]
+
     return jsonify({
         'most_frequent': most_frequent,
         'longest_missing': longest_missing,
-        'odd_even': odd_even
+        'gap_distribution': sorted_gap_dists
     })
-
-
 
 
 
