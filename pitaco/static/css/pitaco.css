@@ -395,7 +395,7 @@ footer .footer-below {
 }
 
 #btn-generate {
-    margin-top: 30px;
+    margin-top: 10px;
 }
 
 #generator .number {
@@ -409,6 +409,10 @@ footer .footer-below {
 
 #generator .all-numbers {
     margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
 @keyframes shake-left {
@@ -458,4 +462,36 @@ footer .footer-below {
 
 #generator .all-numbers>div:nth-child(even) .number.shake {
     animation-name: shake-right;
+}
+
+.chart-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.algo-selector-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.algo-selector-container label {
+    font-size: 1.5em;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 400;
+    /* Optional: make it look cleaner */
+}
+
+.algo-selector-container input[type="checkbox"] {
+    transform: scale(1.5);
+    margin: 0 !important;
+    /* Overriding Bootstrap */
+    position: static !important;
+    /* Overriding Bootstrap */
 }

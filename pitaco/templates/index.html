@@ -46,7 +46,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#page-top">Pitaco!</a>
+                <a class="navbar-brand" href="#page-top">Pitaco da Sorte!</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -74,22 +74,23 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="intro-text">
-                        <span class="name">Pitaco!</span>
+                        <span class="name">Pitaco da Sorte!</span>
                         <hr class="star-light">
                         <span class="skills">Aumente suas chances de se tornar um milionário.<br />Números gerados com
-                            base em estatísticas de resultados da Mega-Sena.</span>
+                            base em estatísticas reais dos resultados da Mega-Sena e um toque de matemática
+                            questionável.</span>
                     </div>
                 </div>
             </div>
-            <div class="row" style="margin-bottom: 20px;">
-                <div class="col-lg-12 text-center">
-                    <label class="checkbox-inline" style="font-size: 1.5em; color: white;">
+            <div class="row">
+                <div class="col-lg-12 text-center algo-selector-container">
+                    <label class="checkbox-inline">
                         <input type="checkbox" id="chk-frequency" checked> Frequência
                     </label>
-                    <label class="checkbox-inline" style="font-size: 1.5em; color: white;">
+                    <label class="checkbox-inline">
                         <input type="checkbox" id="chk-missing" checked> Atraso
                     </label>
-                    <label class="checkbox-inline" style="font-size: 1.5em; color: white;">
+                    <label class="checkbox-inline">
                         <input type="checkbox" id="chk-gaps" checked> Distância
                     </label>
                 </div>
@@ -100,12 +101,12 @@
                 </div>
             </div>
             <div class="row gutter-10 all-numbers">
-                <div class="col-md-1 col-lg-offset-3"><span class="number" id="generated-number-0">?</span></div>
-                <div class="col-md-1"><span class="number" id="generated-number-1">?</span></div>
-                <div class="col-md-1"><span class="number" id="generated-number-2">?</span></div>
-                <div class="col-sm-1"><span class="number" id="generated-number-3">?</span></div>
-                <div class="col-sm-1"><span class="number" id="generated-number-4">?</span></div>
-                <div class="col-sm-1"><span class="number" id="generated-number-5">?</span></div>
+                <div><span class="number" id="generated-number-0">?</span></div>
+                <div><span class="number" id="generated-number-1">?</span></div>
+                <div><span class="number" id="generated-number-2">?</span></div>
+                <div><span class="number" id="generated-number-3">?</span></div>
+                <div><span class="number" id="generated-number-4">?</span></div>
+                <div><span class="number" id="generated-number-5">?</span></div>
             </div>
         </div>
     </header>
@@ -121,20 +122,62 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="panel panel-default" style="border: none; box-shadow: none;">
+                            <div class="panel-heading" role="tab" id="headingOne"
+                                style="background-color: transparent; text-align: center;">
+                                <h4 class="panel-title">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                                        aria-expanded="true" aria-controls="collapseOne"
+                                        style="color: #2c3e50; text-decoration: underline;">
+                                        Como funcionam os algoritmos?
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse" role="tabpanel"
+                                aria-labelledby="headingOne">
+                                <div class="panel-body" style="text-align: left; font-size: 1.2em;">
+                                    <p>O gerador do Pitaco utiliza três métodos estatísticos para sugerir números:</p>
+                                    <ul>
+                                        <li><strong>Frequência:</strong> Seleciona os números que mais saíram em toda a
+                                            história da Mega-Sena. A ideia é que alguns números têm uma tendência
+                                            natural (ou vício) de sair mais vezes.</li>
+                                        <li><strong>Atraso:</strong> Busca os números que estão há mais tempo sem serem
+                                            sorteados. A teoria é que a probabilidade de um número sair aumenta quanto
+                                            mais tempo ele fica sem aparecer ("retorno à média").</li>
+                                        <li><strong>Distância:</strong> Analisa a distribuição das diferenças (gaps)
+                                            entre os números ordenados de um sorteio. Em vez de focar nos números em si,
+                                            foca no "perfil" do sorteio, tentando replicar padrões comuns de espaçamento
+                                            entre as dezenas.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <h3 class="text-center">Mais Frequentes</h3>
-                    <canvas id="chart-frequent"></canvas>
+                    <div class="chart-container">
+                        <canvas id="chart-frequent"></canvas>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <h3 class="text-center">Mais Atrasados</h3>
-                    <canvas id="chart-missing"></canvas>
+                    <div class="chart-container">
+                        <canvas id="chart-missing"></canvas>
+                    </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
                     <h3 class="text-center">Distribuição de Distância</h3>
-                    <canvas id="chart-gap"></canvas>
+                    <div class="chart-container">
+                        <canvas id="chart-gap"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -150,18 +193,10 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-4 col-lg-offset-2">
+                <div class="col-lg-8 col-lg-offset-2">
                     <p>Este projeto começou na tentativa de aumentar as chances de ganhar na Megasena sem precisar
                         participar de bolões, onde as chances são maiores, mas você precisa dividir o prêmio com outras
                         pessoas. Este site é para quem quer ganhar o prêmio sozinho. :)</p>
-                </div>
-                <div class="col-lg-4">
-                    <p>Atualmente estou usando 3 algoritmos:<br />
-                        1. Números mais frequentes;<br />
-                        2. Números há mais tempo sem sair;<br />
-                        3. Distribuição de distância entre números<br />
-                        Se você tiver sugestão de novos algoritmos, me informe para melhorarmos ainda mais.
-                    </p>
                 </div>
             </div>
         </div>
