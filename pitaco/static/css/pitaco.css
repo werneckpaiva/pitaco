@@ -475,6 +475,7 @@ footer .footer-below {
     align-items: center;
     gap: 30px;
     margin-top: 40px;
+    flex-wrap: wrap;
 }
 
 .algo-selector-container label {
