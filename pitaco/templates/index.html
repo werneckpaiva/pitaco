@@ -30,6 +30,30 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    {% if ga_tracking_id %}
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_tracking_id }}"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', '{{ ga_tracking_id }}');
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var btn = document.getElementById('btn-generate');
+            if (btn) {
+                btn.addEventListener('click', function () {
+                    gtag('event', 'click', {
+                        'event_category': 'interaction',
+                        'event_label': 'generate_button'
+                    });
+                });
+            }
+        });
+    </script>
+    {% endif %}
+
 </head>
 
 <body id="page-top" class="index">

@@ -7,3 +7,5 @@ downloads_tests/*.GIF
 __pycache__
 
 venv/
+
+.env
