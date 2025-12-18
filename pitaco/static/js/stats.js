@@ -56,6 +56,7 @@ function createLineChart(canvasId, labels, datasets) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             interaction: {
                 mode: 'index',
                 intersect: false,
@@ -104,8 +105,14 @@ function createBarChart(canvasId, label, labels, data) {
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false,
             scales: {
-                y: { beginAtZero: true }
+                y: { beginAtZero: true },
+                x: {
+                    ticks: {
+                        autoSkip: false
+                    }
+                }
             }
         }
     });

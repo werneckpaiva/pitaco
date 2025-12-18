@@ -34,13 +34,37 @@ $("#btn-generate").click(function () {
     var useFrequency = $("#chk-frequency").is(":checked");
     var useMissing = $("#chk-missing").is(":checked");
     var useGaps = $("#chk-gaps").is(":checked");
+    var qnt = $("#qnt-selector").val();
 
-    var url = "/generate?use_frequency=" + useFrequency + "&use_missing=" + useMissing + "&use_gaps=" + useGaps;
+    var url = "/generate?use_frequency=" + useFrequency + "&use_missing=" + useMissing + "&use_gaps=" + useGaps + "&qnt=" + qnt;
 
     $.getJSON(url)
         .done(function (data) {
-            for (var i = 0; i < 6; i++) {
-                $("#generated-number-" + i).html(data.numbers[i]);
-            }
+            var container = $("#numbers-container");
+            container.empty();
+
+            data.numbers.forEach(function (num, index) {
+                var div = $("<div>");
+                var span = $("<span>").addClass("number shake").text(num);
+                div.append(span);
+                container.append(div);
+            });
+            setTimeout(function () {
+                $(".number").removeClass("shake");
+            }, 500);
         })
 })
+
+$("#qnt-selector").change(function () {
+    var val = $(this).val();
+    var chkGaps = $("#chk-gaps");
+    if (val != "6") {
+        chkGaps.prop('checked', false);
+        chkGaps.prop('disabled', true);
+        chkGaps.parent().addClass('disabled');
+    } else {
+        chkGaps.prop('disabled', false);
+        chkGaps.prop('checked', true);
+        chkGaps.parent().removeClass('disabled');
+    }
+});

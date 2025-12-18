@@ -30,12 +30,19 @@ def generate():
     use_frequency = request.args.get('use_frequency', 'true') == 'true'
     use_missing = request.args.get('use_missing', 'true') == 'true'
     use_gaps = request.args.get('use_gaps', 'true') == 'true'
+    try:
+        qnt = int(request.args.get('qnt', 6))
+        if not (6 <= qnt <= 20):
+            qnt = 6
+    except ValueError:
+        qnt = 6
     
     generator = MegasenaNumberGenerator(folder)
     numbers = generator.generate(
         use_frequency=use_frequency,
         use_missing=use_missing,
-        use_gaps=use_gaps
+        use_gaps=use_gaps,
+        qnt=qnt
     )
     return jsonify({'numbers':["%02d" % i for i in numbers]})
 

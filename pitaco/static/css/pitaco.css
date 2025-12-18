@@ -465,8 +465,17 @@ footer .footer-below {
 }
 
 .chart-container {
-    max-width: 800px;
     margin: 0 auto;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 20px;
+}
+
+.chart-container canvas {
+    min-width: 1000px;
+    height: 400px;
+    display: block;
 }
 
 .algo-selector-container {

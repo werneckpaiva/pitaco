@@ -93,28 +93,29 @@ class MegasenaNumberGenerator:
         # Fallback in case of rounding errors, return last one
         return numbers.pop()[0]
 
-    def _generate_candidate(self, numbers: List[Tuple[int, float]]) -> List[int]:
+    def _generate_candidate(self, numbers: List[Tuple[int, float]], qnt: int = 6) -> List[int]:
         """
         Generates a single candidate draw using the given weights.
         """
         # Clone numbers list because _sample_number pops items
         current_numbers = list(numbers)
         result_numbers: List[int] = []
-        for _ in range(6):
+        for _ in range(qnt):
             if not current_numbers: break
             selected_number = self._sample_number(current_numbers)
             result_numbers.append(selected_number)
         return sorted(result_numbers)
 
-    def generate(self, num_candidates: int = 1000, use_frequency: bool = True, use_missing: bool = True, use_gaps: bool = True) -> List[int]:
+    def generate(self, num_candidates: int = 1000, use_frequency: bool = True, use_missing: bool = True, use_gaps: bool = True, qnt: int = 6) -> List[int]:
         """
-        Generates a sequence of 6 unique numbers.
+        Generates a sequence of `qnt` unique numbers.
         
         Args:
             num_candidates: Number of candidates to generate/consider.
             use_frequency: If True, adjusts weights based on historical frequency.
             use_missing: If True, adjusts weights based on how long numbers have been missing.
-            use_gaps: If True, enforces historical gap distributions and repetition patterns.
+            use_gaps: If True, enforces historical gap distributions and repetition patterns (Only for qnt=6).
+            qnt: Quantity of numbers to generate (6-20).
         """
         # 1. Calculate Number Weights
         # Initialize numbers 1..60 with a base weight of 1.0
@@ -139,14 +140,15 @@ class MegasenaNumberGenerator:
             weighted_numbers_tuples = self._update_weights_based_on_missing(weighted_numbers_tuples)
 
         # 2. Generate Numbers
-        if use_gaps:
+        # Gap analysis is strictly for standard 6-number games
+        if use_gaps and qnt == 6:
              return self._generate_with_gaps_and_weights(num_candidates, weighted_numbers_tuples, use_scoring=use_frequency or use_missing)
         else:
-             return self._generate_with_weights_only(weighted_numbers_tuples)
+             return self._generate_with_weights_only(weighted_numbers_tuples, qnt)
 
-    def _generate_with_weights_only(self, weighted_numbers: List[Tuple[int, float]]) -> List[int]:
+    def _generate_with_weights_only(self, weighted_numbers: List[Tuple[int, float]], qnt: int) -> List[int]:
         """Generates a single draw using only the provided weights."""
-        return self._generate_candidate(weighted_numbers)
+        return self._generate_candidate(weighted_numbers, qnt)
 
     def _generate_with_gaps_and_weights(self, num_candidates: int, weighted_numbers: List[Tuple[int, float]], use_scoring: bool) -> List[int]:
         """

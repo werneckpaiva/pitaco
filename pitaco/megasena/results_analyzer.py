@@ -40,7 +40,7 @@ class MegasenaResultsAnalyzer:
     @cache
     def get_most_frequent(self, qnt: int = 0) -> List[Tuple[int, int]]:
         """Returns the most frequent numbers drawn."""
-        freq: Dict[int, int] = {}
+        freq: Dict[int, int] = {i: 0 for i in range(1, 61)}
         for r in self.results:
             for n in r.numbers:
                 freq[n] = freq.get(n, 0) + 1
@@ -52,12 +52,20 @@ class MegasenaResultsAnalyzer:
     def get_numbers_by_absence_duration(self, qnt: int = 0) -> List[Tuple[int, int]]:
         """Returns the numbers that haven't been drawn for the longest time, sorted by their absence duration."""
         numbers: Dict[int, int] = {}
+        total_draws = len(self.results)
+        
         for i, r in enumerate(self.results[::-1]):
             for n in r.numbers:
                 if n not in numbers:
                     numbers[n] = i
             if len(numbers) == 60:  # Assuming 60 possible numbers in Megasena (1-60)
                 break
+        
+        # Fill in numbers that never appeared
+        for n in range(1, 61):
+            if n not in numbers:
+                numbers[n] = total_draws
+
         sorted_numbers = sorted(numbers.items(), key=lambda x: x[1], reverse=True)
         if qnt > 0: return sorted_numbers[0:qnt]
         return sorted_numbers
